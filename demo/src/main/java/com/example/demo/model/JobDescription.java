@@ -1,80 +1,75 @@
+// src/main/java/com/example/demo/model/JobDescription.java
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import java.math.BigDecimal;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import java.sql.Timestamp;
 
 @Entity
+@Table(name = "job_description")
 public class JobDescription {
-
+    public enum JobType { SWE, DATA_ANALYTICS }
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long jobDescriptionId;
-
+    private Long id;
+    
+    @Column(name = "job_title", nullable = false)
     private String jobTitle;
-    private String jobLocation;
-    private String jobType;       // e.g., Full-time, Internship, etc.
-    private String requirements;  // e.g., skill requirements
-
+    
+    private String location;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private JobType type;
+    
+    @Column(name = "package_offered", precision = 10, scale = 2, nullable = false)
+    private BigDecimal packageOffered;
+    
+    @Column(name = "gpa_cutoff", precision = 3, scale = 2)
+    private BigDecimal gpaCutoff;
+    
     @ManyToOne
     @JoinColumn(name = "company_id")
     private Company company;
-
-    public JobDescription() {
-    }
-
-    public JobDescription(String jobTitle, String jobLocation, String jobType, String requirements, Company company) {
-        this.jobTitle = jobTitle;
-        this.jobLocation = jobLocation;
-        this.jobType = jobType;
-        this.requirements = requirements;
-        this.company = company;
-    }
-
-    // Getters and Setters
-    public Long getJobDescriptionId() {
-        return jobDescriptionId;
-    }
-
-    public void setJobDescriptionId(Long jobDescriptionId) {
-        this.jobDescriptionId = jobDescriptionId;
-    }
-
-    public String getJobTitle() {
-        return jobTitle;
-    }
     
-    public void setJobTitle(String jobTitle) {
-        this.jobTitle = jobTitle;
+    @CreationTimestamp
+    @Column(name = "created_at")
+    private Timestamp createdAt;
+    
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private Timestamp updatedAt;
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public String getJobTitle() { return jobTitle; }
+    public void setJobTitle(String jobTitle) { this.jobTitle = jobTitle; }
+
+    public String getLocation() { return location; }
+    public void setLocation(String location) { this.location = location; }
+
+    public JobType getType() { return type; }
+    public void setType(JobType type) { this.type = type; }
+
+    public BigDecimal getPackageOffered() { return packageOffered; }
+    public void setPackageOffered(BigDecimal packageOffered) { 
+        this.packageOffered = packageOffered; 
     }
 
-    public String getJobLocation() {
-        return jobLocation;
-    }
-    
-    public void setJobLocation(String jobLocation) {
-        this.jobLocation = jobLocation;
-    }
+    public BigDecimal getGpaCutoff() { return gpaCutoff; }
+    public void setGpaCutoff(BigDecimal gpaCutoff) { this.gpaCutoff = gpaCutoff; }
 
-    public String getJobType() {
-        return jobType;
-    }
-    
-    public void setJobType(String jobType) {
-        this.jobType = jobType;
-    }
+    public Company getCompany() { return company; }
+    public void setCompany(Company company) { this.company = company; }
 
-    public String getRequirements() {
-        return requirements;
-    }
-    
-    public void setRequirements(String requirements) {
-        this.requirements = requirements;
-    }
+    public Timestamp getCreatedAt() { return createdAt; }
+    public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }
 
-    public Company getCompany() {
-        return company;
-    }
-    
-    public void setCompany(Company company) {
-        this.company = company;
-    }
+    public Timestamp getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(Timestamp updatedAt) { this.updatedAt = updatedAt; }
+    // Getters, Setters, Constructors
 }

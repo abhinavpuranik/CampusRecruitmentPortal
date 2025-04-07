@@ -1,101 +1,122 @@
+// src/main/java/com/example/demo/model/Student.java
 package com.example.demo.model;
 
+import com.example.demo.model.PlacementResult.OfferStatus;
+import com.example.demo.state.*;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Entity
+@Table(name = "student")
 public class Student {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long studentId;
-
+    @Column(name = "srn", length = 15, nullable = false)
+    private String srn;
+    
+    @Column(nullable = false)
     private String name;
+    
+    @Column(unique = true, nullable = false)
     private String email;
-    private String phone;
-    private String rollNo;
+    
+    @Column(name = "phone_no", length = 15)
+    private String phoneNo;
+    
+    @Column(name = "graduation_year", nullable = false)
+    private Integer graduationYear;
+    
+    @Column(name = "resume_url")
+    private String resumeUrl;
+    
+    @Column(precision = 3, scale = 2)
+    private BigDecimal gpa;
+    
     private String branch;
-
-    // If a student can have multiple job offers or placements:
-    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Placement> placements;
-
-    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Feedback> feedbacks; // Alumni feedback to companies
-
-    public Student() {
-    }
-
-    public Student(String name, String email, String phone, String rollNo, String branch) {
-        this.name = name;
-        this.email = email;
-        this.phone = phone;
-        this.rollNo = rollNo;
-        this.branch = branch;
-    }
-
-    // Getters and Setters
-    public Long getStudentId() {
-        return studentId;
-    }
-
-    public void setStudentId(Long studentId) {
-        this.studentId = studentId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
+    
+    @CreationTimestamp
+    @Column(name = "created_at")
+    private Timestamp createdAt;
+    
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private Timestamp updatedAt;
+    
+    @OneToMany(mappedBy = "student")
+    private List<PlacementResult> placementResults;
+    
+    @Transient
+    private EligibilityState currentState;
+    
+    @PostLoad
+    public void initializeState() {
+        if (hasTier1Offer()) {
+            currentState = new Tier1OfferState();
+        } else if (hasTier2Offer()) {
+            currentState = new Tier2OfferState();
+        } else {
+            currentState = new NoOfferState();
+        }
     }
     
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhone() {
-        return phone;
+    public boolean canApplyToJob(JobDescription job) {
+        return currentState.canApplyToJob(this, job);
     }
     
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getRollNo() {
-        return rollNo;
+    private boolean hasTier1Offer() {
+        return placementResults.stream()
+            .anyMatch(r -> r.getStatus() == OfferStatus.ACCEPTED && 
+                r.getSalaryPackage().compareTo(new BigDecimal("12")) >= 0);
     }
     
-    public void setRollNo(String rollNo) {
-        this.rollNo = rollNo;
-    }
-
-    public String getBranch() {
-        return branch;
+    private boolean hasTier2Offer() {
+        return placementResults.stream()
+            .anyMatch(r -> r.getStatus() == OfferStatus.ACCEPTED &&
+                r.getSalaryPackage().compareTo(new BigDecimal("6")) >= 0 &&
+                r.getSalaryPackage().compareTo(new BigDecimal("12")) < 0);
     }
     
-    public void setBranch(String branch) {
-        this.branch = branch;
+       public String getSrn() { return srn; }
+    public void setSrn(String srn) { this.srn = srn; }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+
+    public String getPhoneNo() { return phoneNo; }
+    public void setPhoneNo(String phoneNo) { this.phoneNo = phoneNo; }
+
+    public Integer getGraduationYear() { return graduationYear; }
+    public void setGraduationYear(Integer graduationYear) { this.graduationYear = graduationYear; }
+
+    public String getResumeUrl() { return resumeUrl; }
+    public void setResumeUrl(String resumeUrl) { this.resumeUrl = resumeUrl; }
+
+    public BigDecimal getGpa() { return gpa; }
+    public void setGpa(BigDecimal gpa) { this.gpa = gpa; }
+
+    public String getBranch() { return branch; }
+    public void setBranch(String branch) { this.branch = branch; }
+
+    public Timestamp getCreatedAt() { return createdAt; }
+    public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }
+
+    public Timestamp getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(Timestamp updatedAt) { this.updatedAt = updatedAt; }
+
+    public List<PlacementResult> getPlacementResults() { return placementResults; }
+    public void setPlacementResults(List<PlacementResult> placementResults) { 
+        this.placementResults = placementResults; 
     }
 
-    public List<Placement> getPlacements() {
-        return placements;
+    public EligibilityState getCurrentState() { return currentState; }
+    public void setCurrentState(EligibilityState currentState) { 
+        this.currentState = currentState; 
     }
-
-    public void setPlacements(List<Placement> placements) {
-        this.placements = placements;
-    }
-
-    public List<Feedback> getFeedbacks() {
-        return feedbacks;
-    }
-
-    public void setFeedbacks(List<Feedback> feedbacks) {
-        this.feedbacks = feedbacks;
-    }
+    // Getters, Setters, Constructors
 }

@@ -1,103 +1,54 @@
+// src/main/java/com/example/demo/model/Company.java
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import java.util.List;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import java.sql.Timestamp;
 
 @Entity
+@Table(name = "company")
 public class Company {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long companyId;
-
+    private Long id;
+    
+    @Column(nullable = false)
     private String name;
-    private String companyType; // e.g., "Software", "Finance", etc.
+    
+    private String type;
     private String address;
+    
+    @Column(name = "contact_no", length = 15)
     private String contactNo;
+    
+    @CreationTimestamp
+    @Column(name = "created_at")
+    private Timestamp createdAt;
+    
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private Timestamp updatedAt;
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<JobDescription> jobDescriptions;
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Placement> placements;
+    public String getType() { return type; }
+    public void setType(String type) { this.type = type; }
 
-    // If you want to see which feedbacks the company has received
-    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Feedback> feedbacks;
+    public String getAddress() { return address; }
+    public void setAddress(String address) { this.address = address; }
 
-    // Constructors
-    public Company() {
-    }
+    public String getContactNo() { return contactNo; }
+    public void setContactNo(String contactNo) { this.contactNo = contactNo; }
 
-    public Company(String name, String companyType, String address, String contactNo) {
-        this.name = name;
-        this.companyType = companyType;
-        this.address = address;
-        this.contactNo = contactNo;
-    }
+    public Timestamp getCreatedAt() { return createdAt; }
+    public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }
 
-    // Getters and Setters
-    public Long getCompanyId() {
-        return companyId;
-    }
+    public Timestamp getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(Timestamp updatedAt) { this.updatedAt = updatedAt; }
 
-    public void setCompanyId(Long companyId) {
-        this.companyId = companyId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCompanyType() {
-        return companyType;
-    }
-
-    public void setCompanyType(String companyType) {
-        this.companyType = companyType;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getContactNo() {
-        return contactNo;
-    }
-
-    public void setContactNo(String contactNo) {
-        this.contactNo = contactNo;
-    }
-
-    public List<JobDescription> getJobDescriptions() {
-        return jobDescriptions;
-    }
-
-    public void setJobDescriptions(List<JobDescription> jobDescriptions) {
-        this.jobDescriptions = jobDescriptions;
-    }
-
-    public List<Placement> getPlacements() {
-        return placements;
-    }
-
-    public void setPlacements(List<Placement> placements) {
-        this.placements = placements;
-    }
-
-    public List<Feedback> getFeedbacks() {
-        return feedbacks;
-    }
-
-    public void setFeedbacks(List<Feedback> feedbacks) {
-        this.feedbacks = feedbacks;
-    }
+    // Constructors, Getters, Setters
 }
