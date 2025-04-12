@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>All Students</title>
+</head>
+<body>
+<h1>All Students</h1>
+<table border="1">
+  <tr>
+    <th>SRN</th>
+    <th>Name</th>
+    <th>Email</th>
+    <th>Phone</th>
+    <th>Branch</th>
+    <th>GPA</th>
+  </tr>
+  <tr th:each="s : ${students}">
+    <td th:text="${s.srn}"></td>
+    <td th:text="${s.name}"></td>
+    <td th:text="${s.email}"></td>
+    <td th:text="${s.phoneNo}"></td>
+    <td th:text="${s.branch}"></td>
+    <td th:text="${s.gpa}"></td>
+  </tr>
+</table>
+</body>
+</html>

@@ -7,6 +7,44 @@
 <body class="bg-light">
 <div class="container mt-5">
     <h2 class="mb-4">Open Job Descriptions</h2>
+
+    <!-- 🔽 GPA Filter Dropdown -->
+    <form method="get" th:action="@{/companies/jobs}" class="mb-3">
+        <div class="row align-items-end">
+
+            <!-- GPA Filter -->
+            <div class="col-md-4">
+                <label for="gpa" class="form-label fw-bold">Filter by GPA Cutoff:</label>
+                <select name="gpa" id="gpa" class="form-select">
+                    <option value="" th:selected="${param.gpa == null or param.gpa == ''}">-- All --</option>
+                    <option value="below7" th:selected="${param.gpa == 'below7'}">Below 7.0</option>
+                    <option value="below8" th:selected="${param.gpa == 'below8'}">Below 8.0</option>
+                    <option value="below8_5" th:selected="${param.gpa == 'below8_5'}">Below 8.5</option>
+                    <option value="above9" th:selected="${param.gpa == 'above9'}">9.0 and above</option>
+                </select>
+            </div>
+
+            <!-- Job Type Filter -->
+            <div class="col-md-4">
+                <label for="type" class="form-label fw-bold">Filter by Job Type:</label>
+                <select name="type" id="type" class="form-select">
+                    <option value="" th:selected="${param.type == null or param.type == ''}">-- All --</option>
+                    <option value="SWE" th:selected="${param.type == 'SWE'}">SWE</option>
+                    <option value="DATA_ANALYTICS" th:selected="${param.type == 'DATA_ANALYTICS'}">Data Analytics</option>
+                </select>
+            </div>
+
+            <!-- Filter Button -->
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-primary mt-4">Apply Filters</button>
+            </div>
+
+        </div>
+    </form>
+
+
+
+
     <table class="table table-bordered table-striped">
         <thead class="table-dark">
         <tr>
@@ -30,8 +68,13 @@
             <td th:text="${job.gpaCutoff != null ? job.gpaCutoff : 'N/A'}"></td>
             <td th:text="${job.company != null ? job.company.name : 'N/A'}"></td>
             <td th:text="${#dates.format(job.createdAt, 'dd-MM-yyyy')}"></td>
+            <td>
+                <a th:href="@{'/companies/jobs/feedbacks'(jobId=${job.id})}">View Feedback</a>
+
+            </td>
         </tr>
         </tbody>
+
     </table>
 </div>
 </body>

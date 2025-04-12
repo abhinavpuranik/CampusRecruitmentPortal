@@ -1,0 +1,24 @@
+<!-- templates/student_home.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Student Home</title>
+</head>
+<body>
+
+<h2>Welcome, <span th:text="${student.name}">Student</span> 👋</h2>
+
+<!-- View Profile -->
+<form th:action="@{/student-login/profile}" method="get">
+  <input type="hidden" name="srn" th:value="${student.srn}" />
+  <input type="hidden" name="name" th:value="${student.name}" />
+  <button type="submit">View Profile</button>
+</form>
+
+<!-- View Jobs -->
+<form th:action="@{/student-login/jobs}" method="get">
+  <button type="submit">View Jobs</button>
+</form>
+
+</body>
+</html>

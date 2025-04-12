@@ -9,6 +9,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.ArrayList;
+
 
 @Entity
 @Table(name = "student")
@@ -44,15 +46,19 @@ public class Student {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private Timestamp updatedAt;
-    
-    @OneToMany(mappedBy = "student")
-    private List<PlacementResult> placementResults;
+
+    @Transient
+    private List<PlacementResult> placementResults = new ArrayList<>();
     
     @Transient
     private EligibilityState currentState;
-    
+
     @PostLoad
     public void initializeState() {
+        if (placementResults == null) {
+            currentState = new NoOfferState();
+            return;
+        }
         if (hasTier1Offer()) {
             currentState = new Tier1OfferState();
         } else if (hasTier2Offer()) {
@@ -61,6 +67,7 @@ public class Student {
             currentState = new NoOfferState();
         }
     }
+
     
     public boolean canApplyToJob(JobDescription job) {
         return currentState.canApplyToJob(this, job);

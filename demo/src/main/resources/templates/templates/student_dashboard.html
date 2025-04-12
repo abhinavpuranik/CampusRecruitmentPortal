@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Student Dashboard</title>
+</head>
+<body>
+
+<h2>Welcome, <span th:text="${student.name}">Student</span></h2>
+
+<p>SRN: <span th:text="${student.srn}"></span></p>
+<p>Email: <span th:text="${student.email}"></span></p>
+<p>Phone: <span th:text="${student.phoneNo}"></span></p>
+<p>Graduation Year: <span th:text="${student.graduationYear}"></span></p>
+<p>GPA: <span th:text="${student.gpa}"></span></p>
+<p>Branch: <span th:text="${student.branch}"></span></p>
+
+<!-- 🔘 View Jobs Button -->
+<form th:action="@{/student-login/jobs}" method="get">
+  <button type="submit">View Jobs</button>
+</form>
+
+</body>
+</html>
