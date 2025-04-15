@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Interview List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+            padding: 40px;
+        }
+        .container {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        a.button, button.action-button {
+            display: inline-block;
+            padding: 8px 12px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            margin: 2px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        a.button:hover, button.action-button:hover {
+            background-color: #0056b3;
+        }
+        form {
+            display: inline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Interviews for <span th:text="${company.name}">Company Name</span></h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Student SRN</th>
+            <th>Job</th>
+            <th>Interview Date</th>
+            <th>Round</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="i : ${interviews}">
+            <td th:text="${i.student.srn}"></td>
+            <td th:text="${i.job.jobTitle}"></td>
+            <td th:text="${#temporals.format(i.interviewDate, 'yyyy-MM-dd HH:mm')}"></td>
+            <td>
+                <form th:action="@{'/company-login/interviews/round/down/' + ${i.id}}" method="post" style="display:inline;">
+                    <button type="submit">-</button>
+                </form>
+                <span th:text="${i.interviewRound}"></span>
+                <form th:action="@{'/company-login/interviews/round/up/' + ${i.id}}" method="post" style="display:inline;">
+                    <button type="submit">+</button>
+                </form>
+            </td>
+            <td>
+                <form th:action="@{'/company-login/interviews/toggle-status/' + ${i.id}}" method="post" style="display:inline;">
+                    <button type="submit" th:text="${i.status}">Status</button>
+                </form>
+            </td>
+            <td>
+                <form th:action="@{'/company-login/interviews/delete/' + ${i.id}}" method="post">
+                    <button type="submit">Delete</button>
+                </form>
+                <form th:action="@{'/company-login/interviews/create-result/' + ${i.id}}"
+                      method="post"
+                      style="display:inline;"
+                      onsubmit="return disableSubmit(this)">
+                    <button type="submit">Create Result</button>
+                </form>
+
+
+
+
+
+            </td>
+        </tr>
+        </tbody>
+
+    </table>
+    <a href="/company-login" class="button">Back to Login</a>
+</div>
+<script>
+    function disableSubmit(form) {
+      const button = form.querySelector('button');
+      if (button.disabled) {
+        return false; // already clicked once, prevent double submit
+      }
+      button.disabled = true;
+      button.innerText = 'Submitting...';
+      return true; // allow form to submit
+    }
+</script>
+
+
+</body>
+</html>

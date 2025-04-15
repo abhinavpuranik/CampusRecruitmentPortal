@@ -8,10 +8,19 @@
 <div class="container mt-5">
     <h2 class="mb-4">Open Job Descriptions</h2>
 
-    <!-- 🔽 GPA Filter Dropdown -->
-    <form method="get" th:action="@{/companies/jobs}" class="mb-3">
-        <div class="row align-items-end">
+    <!-- ✅ Success / Error Alerts -->
+    <div th:if="${message}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <span th:text="${message}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <span th:text="${error}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
 
+    <!-- 🔽 Filter Form -->
+    <form method="get" th:action="@{/student-login/jobs}" class="mb-3">
+        <div class="row align-items-end">
             <!-- GPA Filter -->
             <div class="col-md-4">
                 <label for="gpa" class="form-label fw-bold">Filter by GPA Cutoff:</label>
@@ -38,13 +47,15 @@
             <div class="col-md-4">
                 <button type="submit" class="btn btn-primary mt-4">Apply Filters</button>
             </div>
-
         </div>
     </form>
 
+    <!-- 🔙 Back Button -->
+    <div class="mb-3">
+        <a href="/student-login" class="btn btn-outline-secondary">&larr; Back to Dashboard</a>
+    </div>
 
-
-
+    <!-- 🔽 Job Table -->
     <table class="table table-bordered table-striped">
         <thead class="table-dark">
         <tr>
@@ -56,6 +67,7 @@
             <th>GPA Cutoff</th>
             <th>Company</th>
             <th>Posted On</th>
+            <th>Actions</th>
         </tr>
         </thead>
         <tbody>
@@ -69,13 +81,33 @@
             <td th:text="${job.company != null ? job.company.name : 'N/A'}"></td>
             <td th:text="${#dates.format(job.createdAt, 'dd-MM-yyyy')}"></td>
             <td>
-                <a th:href="@{'/companies/jobs/feedbacks'(jobId=${job.id})}">View Feedback</a>
-
+                <div class="d-flex flex-column gap-1">
+                    <a th:href="@{'/student-login/jobs/feedbacks'(jobId=${job.id})}" class="btn btn-outline-info btn-sm">View Feedback</a>
+                    <span th:if="${student != null}">
+                        <span th:if="${appliedJobIds.contains(job.id)}" class="btn btn-secondary btn-sm disabled">Already Applied</span>
+                        <a th:if="${!appliedJobIds.contains(job.id)}"
+                           th:href="@{'/student-login/apply'(jobId=${job.id})}"
+                           class="btn btn-success btn-sm"
+                           onclick="return checkEligibility(${student.cgpa}, ${job.gpaCutoff})">Apply</a>
+                    </span>
+                </div>
             </td>
         </tr>
         </tbody>
-
     </table>
 </div>
+
+<!-- 🎯 Eligibility Check Script -->
+<script>
+    function checkEligibility(studentGPA, jobGPA) {
+        if (studentGPA < jobGPA) {
+            alert("You are not eligible to apply for this job based on your GPA.");
+            return false;  // Prevent applying if GPA is below the cutoff
+        }
+        return true;  // Proceed with the application if GPA is eligible
+    }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

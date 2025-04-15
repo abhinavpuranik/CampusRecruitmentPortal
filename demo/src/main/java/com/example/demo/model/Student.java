@@ -47,8 +47,9 @@ public class Student {
     @Column(name = "updated_at")
     private Timestamp updatedAt;
 
-    @Transient
+    @OneToMany(mappedBy = "student", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<PlacementResult> placementResults = new ArrayList<>();
+
     
     @Transient
     private EligibilityState currentState;
@@ -75,7 +76,7 @@ public class Student {
     
     private boolean hasTier1Offer() {
         return placementResults.stream()
-            .anyMatch(r -> r.getStatus() == OfferStatus.ACCEPTED && 
+            .anyMatch(r -> r.getStatus() == OfferStatus.ACCEPTED &&
                 r.getSalaryPackage().compareTo(new BigDecimal("12")) >= 0);
     }
     
@@ -117,9 +118,11 @@ public class Student {
     public void setUpdatedAt(Timestamp updatedAt) { this.updatedAt = updatedAt; }
 
     public List<PlacementResult> getPlacementResults() { return placementResults; }
-    public void setPlacementResults(List<PlacementResult> placementResults) { 
-        this.placementResults = placementResults; 
+    public void setPlacementResults(List<PlacementResult> placementResults) {
+        this.placementResults = placementResults;
+        initializeState(); // trigger state update
     }
+
 
     public EligibilityState getCurrentState() { return currentState; }
     public void setCurrentState(EligibilityState currentState) { 

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Company Dashboard</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #f4f4f4;
+      padding: 40px;
+      text-align: center;
+    }
+    .container {
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      display: inline-block;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    h2 {
+      margin-bottom: 20px;
+    }
+    form {
+      margin-top: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #1e7e34;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Welcome, <span th:text="${company.name}">Company</span></h2>
+
+  <!-- View Interviews Button -->
+  <form th:action="@{/company-login/interviews}" method="get">
+    <input type="hidden" name="id" th:value="${company.id}" />
+    <button type="submit">View Interviews</button>
+  </form>
+
+  <!-- Add Job Button -->
+  <form th:action="@{/company-login/jobs/add}" method="get">
+    <input type="hidden" name="id" th:value="${company.id}" />
+    <button type="submit">Add Job</button>
+  </form>
+</div>
+
+</body>
+</html>
