@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,16 +24,19 @@ public class LoginController {
     private final JobDescriptionRepository jobRepo;
     private final InterviewRepository interviewRepo;
     private final FeedbackRepository feedbackRepo;
+    private final PlacementResultRepository placementResultRepo;
 
     @Autowired
     public LoginController(StudentRepository studentRepo,
                            JobDescriptionRepository jobRepo,
                            InterviewRepository interviewRepo,
-                           FeedbackRepository feedbackRepo) {
+                           FeedbackRepository feedbackRepo,
+                           PlacementResultRepository placementResultRepo) {
         this.studentRepo = studentRepo;
         this.jobRepo = jobRepo;
         this.interviewRepo = interviewRepo;
         this.feedbackRepo = feedbackRepo;
+        this.placementResultRepo = placementResultRepo;
     }
 
     @GetMapping
@@ -154,12 +158,27 @@ public class LoginController {
         Interview interview = new Interview();
         interview.setStudent(student);
         interview.setJob(job);
+        interview.setCompany(job.getCompany());
+        interview.setInterviewRound("Round 0");
         interview.setInterviewDate(LocalDateTime.now());
         interviewRepo.save(interview);
 
         redirectAttributes.addFlashAttribute("success", "Successfully applied to job: " + job.getJobTitle());
         return "redirect:/student-login/jobs";
     }
+    @GetMapping("/results")
+    public String viewPlacementResults(HttpSession session, Model model) {
+        Student student = (Student) session.getAttribute("student");
+        if (student == null) {
+            return "redirect:/student-login";
+        }
+
+        List<PlacementResult> results = placementResultRepo.findByStudent(student);
+        model.addAttribute("results", results);
+        model.addAttribute("student", student);
+        return "templates/student_results";
+    }
+
 
 
 }

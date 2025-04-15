@@ -2,22 +2,66 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <title>Student Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      padding: 40px;
+    }
+
+    .dashboard {
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      width: 400px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    p {
+      margin: 10px 0;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 20px;
+      border: none;
+      border-radius: 4px;
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
 </head>
 <body>
 
-<h2>Welcome, <span th:text="${student.name}">Student</span></h2>
+<div class="dashboard">
+  <h2>Welcome, <span th:text="${student.name}">Student</span></h2>
 
-<p>SRN: <span th:text="${student.srn}"></span></p>
-<p>Email: <span th:text="${student.email}"></span></p>
-<p>Phone: <span th:text="${student.phoneNo}"></span></p>
-<p>Graduation Year: <span th:text="${student.graduationYear}"></span></p>
-<p>GPA: <span th:text="${student.gpa}"></span></p>
-<p>Branch: <span th:text="${student.branch}"></span></p>
+  <p><strong>SRN:</strong> <span th:text="${student.srn}"></span></p>
+  <p><strong>Email:</strong> <span th:text="${student.email}"></span></p>
+  <p><strong>Phone:</strong> <span th:text="${student.phoneNo}"></span></p>
+  <p><strong>Graduation Year:</strong> <span th:text="${student.graduationYear}"></span></p>
+  <p><strong>GPA:</strong> <span th:text="${student.gpa}"></span></p>
+  <p><strong>Branch:</strong> <span th:text="${student.branch}"></span></p>
 
-<!-- 🔘 View Jobs Button -->
-<form th:action="@{/student-login/jobs}" method="get">
-  <button type="submit">View Jobs</button>
-</form>
+  <form th:action="@{/student-login/jobs}" method="get">
+    <button type="submit">View Jobs</button>
+  </form>
+</div>
 
 </body>
 </html>

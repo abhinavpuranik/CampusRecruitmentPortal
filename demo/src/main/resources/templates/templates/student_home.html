@@ -1,24 +1,72 @@
-<!-- templates/student_home.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <title>Student Home</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      padding: 40px;
+    }
+
+    .home {
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      width: 350px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    form {
+      margin-bottom: 15px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 4px;
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
 </head>
 <body>
 
-<h2>Welcome, <span th:text="${student.name}">Student</span> 👋</h2>
+<div class="home">
+  <h2>Welcome, <span th:text="${student.name}">Student</span> 👋</h2>
 
-<!-- View Profile -->
-<form th:action="@{/student-login/profile}" method="get">
-  <input type="hidden" name="srn" th:value="${student.srn}" />
-  <input type="hidden" name="name" th:value="${student.name}" />
-  <button type="submit">View Profile</button>
-</form>
+  <!-- View Profile -->
+  <form th:action="@{/student-login/profile}" method="get">
+    <input type="hidden" name="srn" th:value="${student.srn}" />
+    <input type="hidden" name="name" th:value="${student.name}" />
+    <button type="submit">View Profile</button>
+  </form>
 
-<!-- View Jobs -->
-<form th:action="@{/student-login/jobs}" method="get">
-  <button type="submit">View Jobs</button>
-</form>
+  <!-- View Jobs -->
+  <form th:action="@{/student-login/jobs}" method="get">
+    <button type="submit">View Jobs</button>
+  </form>
+
+  <form th:action="@{/student-login/results}" method="get">
+    <button type="submit">View Results</button>
+  </form>
+</div>
+
+</div>
 
 </body>
 </html>

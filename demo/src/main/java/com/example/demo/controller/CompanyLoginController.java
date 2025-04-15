@@ -93,7 +93,7 @@ public class CompanyLoginController {
         String roundStr = interview.getInterviewRound().replace("Round ", "");
         int currentRound = Integer.parseInt(roundStr);
 
-        if (currentRound > 1) {
+        if (currentRound > 0) {
             interview.setInterviewRound("Round " + (currentRound - 1));
             interviewRepo.save(interview);
         }
